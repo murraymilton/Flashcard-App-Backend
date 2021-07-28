@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from flashcardapp.flashcard.models import Collections, Cards
+from .models import Collections, Cards
 
 
 class CollectionSerializer(serializers.ModelSerializer):

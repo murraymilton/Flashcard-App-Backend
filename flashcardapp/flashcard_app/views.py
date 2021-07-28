@@ -1,18 +1,17 @@
 from django.http import Http404
-from django.shortcuts import render
-from flashcardapp.flashcard.models import Collections, Cards
+from .models import Collections, Cards
 from .serializers import CollectionSerializer, CardSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import  status
+from rest_framework import status
 
 
 class CollectionList(APIView):
 
 
     def get(self, request):
-        collections = Collections.objects.all()
-        serializer = CollectionSerializer(collections, many=True)
+        collection = Collections.objects.all()
+        serializer = CollectionSerializer(collection, many=True)
         return Response(serializer.data)
 
 

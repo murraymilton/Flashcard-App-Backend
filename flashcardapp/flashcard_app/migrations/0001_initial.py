@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('answer', models.CharField(max_length=250)),
                 ('question', models.CharField(max_length=500)),
-                ('collection', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='flashcard.collections')),
+                ('collection', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='flashcard_app.collections')),
             ],
         ),
     ]

@@ -22,59 +22,52 @@ class CollectionList(APIView):
              return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class CardCollectionDetail(APIView):
 
-class EditCollection(APIView):
-
-    def get_by_id(self, pk):
+    def get_object(self, pk):
         try:
-            return Collections.objects.get(pk=pk)
+            return Collections.objects.get(id=pk)
         except Collections.DoesNotExist:
             raise Http404
 
     def get(self, request, pk):
-        collections = self.get_by_id(pk)
-        serializer = CollectionSerializer(collections)
-        return Response (serializer.data, status=status.HTTP_200_OK)
-
+        collection = self.get_object(pk)
+        serializer = CollectionSerializer(collection)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, pk):
-        collections = self.get_by_id(pk)
-        serializer = CollectionSerializer(collections)
-        collections.delete()
+        collection = self.get_object(pk)
+        serializer = CollectionSerializer(collection)
+        collection.delete()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class CardsCollection(APIView):
+class CardsInCollection(APIView):
 
-    def get(self, request, fk ):
-        cards = self.get_by_id.filter(Collections=fk)
-        serializer = CardSerializer(cards, many=True)
+    def get(self, request, fk):
+        card = Cards.objects.filter(collection_id=fk)
+        serializer = CardSerializer(card, many=True)
         return Response(serializer.data)
-
-    def post(self, request, fk):
-        serializer = CardSerializer(data=request.data, fk=fk)
-        if serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class EditCard(APIView):
 
-    def get_card(self, pk):
+    def get_object(self, pk):
         try:
             return Cards.objects.get(id=pk)
         except Cards.DoesNotExist:
             raise Http404
 
-    def add(self, request, pk):
-        card = self.get_card(pk)
-        serializer = CardSerializer(card, data=request.data)
+    def put(self, request, pk):
+        card_id = self.get_object(pk)
+        serializer = CardSerializer(card_id, data=request.data)
         if serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+        return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
 
     def delete(self, request, pk):
-        card = self.get_card(pk)
-        serializer = CardSerializer(card)
-        card.delete()
+        card_id = self.get_object(pk)
+        serializer = CardSerializer(card_id)
+        card_id.delete()
         return Response(serializer.data, status=status.HTTP_200_OK)

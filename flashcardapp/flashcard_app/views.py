@@ -33,7 +33,7 @@ class CardList(APIView):
         except Cards.DoesNotExist:
             raise Http404
 
-    def post(self, request, collection):
+    def post(self, request):
         serializer = CardSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
